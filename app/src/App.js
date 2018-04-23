@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const url = process.env.NODE_ENV === 'production' ? "/api/" : "http://localhost:5000/api/";
+const url = process.env.NODE_ENV === 'production' ? "/api/" : "http://10.60.165.39:5000/api/";
 
 class App extends Component {
   constructor(props) {
@@ -12,8 +12,8 @@ class App extends Component {
       luminosidade: '',
       temperatura: '',
       umidade: '',
-      led1on: false,
-      led2on: false,
+      led1on: 0,
+      led2on: 0,
     }
   }
 
@@ -50,6 +50,21 @@ class App extends Component {
     });
   }
 
+  postStatus() {
+    const { led1on, led2on } = this.state;
+
+    axios.post(`${url}status`, {
+      led1on,
+      led2on
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -75,10 +90,17 @@ class App extends Component {
         </div>
 
         <div>
-          <button onClick={() => this.getStatus()}>
+          <button onClick={() => {
+            this.setState({ led1on: this.state.led1on === 1 ? 0 : 1 });
+            this.postStatus();
+          }}>
             Led 1 {this.state.led1on ? 'ligado' : 'desligado'}
           </button>
-          <button onClick={() => this.getStatus()}>
+
+          <button onClick={() => {
+            this.setState({ led2on: this.state.led2on === 1 ? 0 : 1 });
+            this.postStatus();
+          }}>
             Led 2 {this.state.led2on ? 'ligado' : 'desligado'}
           </button>
         </div>

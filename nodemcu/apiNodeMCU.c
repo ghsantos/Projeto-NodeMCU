@@ -10,11 +10,11 @@
 
 DHT dht(DHTPIN, DHTTYPE);
 
-const char* ssid = "EVERSONRICARDO";
-const char* password = "6195590827";
+const char* ssid = "WIFI UCB";
+const char* password = "";
 
 WiFiClient client;
-const char* host = "192.168.0.16";
+const char* host = "10.60.165.39";
 
 void setup() {
     pinMode ( LED1, OUTPUT );
@@ -43,8 +43,8 @@ void loop() {
         Serial.println("timeSinceLastWriteLeds");
         timeSinceLastWriteLeds = 0;
         
-        if(client.connect(host, 8080)){
-            client.print("GET /status HTTP/1.1\n");
+        if(client.connect(host, 5000)){
+            client.print("GET /api/status HTTP/1.1\n");
             client.println("Host: 192.168.0.16");
             client.println("Connection: close");
             client.print("\n\n");
@@ -92,8 +92,8 @@ void loop() {
                 return;
             }
             
-            const int led1on = root["200 OK"]["led1on"];
-            const int led2on = root["200 OK"]["led2on"];
+            const int led1on = root["led1on"];
+            const int led2on = root["led2on"];
             
             Serial.println(led1on);
             
@@ -150,16 +150,16 @@ void loop() {
         Serial.println("timeSinceLastReadSensors");
         timeSinceLastReadSensors = 0;
         
-        if(client.connect(host, 8080)){
+        if(client.connect(host, 5000)){
             String postStr = "{\"temperatura\": \"";
             postStr += t;
-            postStr += "\", \"humidade\": \"";
+            postStr += "\", \"umidade\": \"";
             postStr += h;
             postStr += "\", \"luminosidade\": \"";
             postStr += luminosidade;
             postStr += "\"}";
 
-            client.print("POST /clima HTTP/1.1\n");
+            client.print("POST /api/clima HTTP/1.1\n");
             client.println("Host: 192.168.0.16");
             client.println("Content-Type: application/json");
             client.print("Content-Length: ");
