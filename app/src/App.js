@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './App.css';
+import RaisedButton from 'material-ui/RaisedButton';
+import AppBar from 'material-ui/AppBar';
 
-const url = process.env.NODE_ENV === 'production' ? "/api/" : "http://10.60.165.39:5000/api/";
+const url = process.env.NODE_ENV === 'production' ? "/api/" : "http://10.130.1.9:5000/api/";
+
+const style = {
+  margin: 12,
+  width: 180,
+};
 
 class App extends Component {
   constructor(props) {
@@ -67,42 +73,64 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
+      <div>
+        <AppBar
+          title="Title"
+          showMenuIconButton={false}
+        />
 
-        <div>
-          <span>Temperatura: {this.state.temperatura} °C</span>
-        </div>
+        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          <div>
+            <div>
+              <span>Temperatura: {this.state.temperatura} °C</span>
+            </div>
 
-        <div>
-          <span>Umidade: {this.state.umidade}%</span>
-        </div>
+            <div>
+              <span>Umidade: {this.state.umidade}%</span>
+            </div>
 
-        <div>
-          <span>Luminosidade: {this.state.luminosidade}%</span>
-        </div>
+            <div>
+              <span>Luminosidade: {this.state.luminosidade}%</span>
+            </div>
+          </div>
 
-        <div>
-          <button onClick={() => this.getStatus()}>status</button>
-          <button onClick={() => this.getClima()}>clima</button>
-        </div>
+          <div>
+            <RaisedButton
+              label="status"
+              primary={true}
+              style={style}
+              onClick={() => this.getStatus()}
+            />
+            <RaisedButton
+              label="clima"
+              primary={true}
+              style={style}
+              onClick={() => this.getClima()}
+            />
+          </div>
 
-        <div>
-          <button onClick={() => {
-            this.setState({ led1on: this.state.led1on === 1 ? 0 : 1 });
-            this.postStatus();
-          }}>
-            Led 1 {this.state.led1on ? 'ligado' : 'desligado'}
-          </button>
+          <div>
+            <RaisedButton
+              label={`Led 1 ${this.state.led1on ? 'ligado' : 'desligado'}`}
+              primary={true}
+              style={style}
+              onClick={() => {
+                this.setState({ led1on: this.state.led1on === 1 ? 0 : 1 });
+                this.postStatus();
+              }}
+            />
 
-          <button onClick={() => {
-            this.setState({ led2on: this.state.led2on === 1 ? 0 : 1 });
-            this.postStatus();
-          }}>
-            Led 2 {this.state.led2on ? 'ligado' : 'desligado'}
-          </button>
+            <RaisedButton
+              label={`Led 2 ${this.state.led2on ? 'ligado' : 'desligado'}`}
+              primary={true}
+              style={style}
+              onClick={() => {
+                this.setState({ led2on: this.state.led2on === 1 ? 0 : 1 });
+                this.postStatus();
+              }}
+            />
+          </div>
+
         </div>
       </div>
     );

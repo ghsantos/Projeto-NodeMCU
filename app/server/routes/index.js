@@ -1,5 +1,5 @@
 let clima = {};
-let status = { 'led1on': false, 'led2on': false }
+let status = { 'led1on': 1, 'led2on': 1 }
 
 module.exports = (router) => {
   router.route('/').get((req, res) => {
