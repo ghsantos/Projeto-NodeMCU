@@ -1,4 +1,4 @@
-let clima = {};
+let clima = {'temperatura': '?', 'umidade': '?', 'luminosidade': '?'};
 let status = { 'led1on': 1, 'led2on': 1 }
 
 module.exports = (router) => {
