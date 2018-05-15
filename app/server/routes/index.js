@@ -1,5 +1,8 @@
 let clima = {'temperatura': '?', 'umidade': '?', 'luminosidade': '?'};
-let status = { 'led1on': 1, 'led2on': 1 }
+//let status = { 'led1on': 1, 'led2on': 1 }
+
+const status = require('../status');
+
 
 module.exports = (router) => {
   router.route('/').get((req, res) => {
@@ -7,13 +10,13 @@ module.exports = (router) => {
   });
 
   router.route('/status').get((req, res) => {
-      res.status(200).send(status);
+      res.status(200).send(status.get());
   });
 
   router.route('/status').post((req, res) => {
       console.log(req.body);
 
-      status = req.body;
+      status.set(req.body);
 
       res.status(200).send(status);
   });

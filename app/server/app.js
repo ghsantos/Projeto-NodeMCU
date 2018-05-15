@@ -8,6 +8,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
+const status = require('./status');
+
 const port = 5000 || process.env.PORT;
 
 const router = express.Router();
@@ -27,12 +29,17 @@ app.use(function(req, res, next) {
 app.use('/api', router);
 
 io.on('connection', socket => {
+  status.setEmiter(socket);
+
   console.log("New client connected");
 
-  setInterval(
-    () => getApiAndEmit(socket),
-    5000
-  );
+  socket.emit('status', status.get());
+
+  socket.on('setStatus', data => {
+    status.set(data);
+
+    socket.broadcast.emit('status', data);
+  })
 
   socket.on("disconnect", () => console.log("Client disconnected"));
 });

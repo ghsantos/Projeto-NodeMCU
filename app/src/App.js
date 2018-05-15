@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import socketIOClient from 'socket.io-client';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import Paper from 'material-ui/Paper';
 
-const url = process.env.NODE_ENV === 'production' ? "/api/" : "http://localhost:5000/api/";
+const url = 'http://10.60.165.39:5000';
+const uri = process.env.NODE_ENV === 'production' ? "/api/" : `${url}/api/`;
 
 const style = {
   margin: 12,
@@ -24,6 +26,7 @@ const paperStyle = {
 class App extends Component {
   constructor(props) {
     super(props);
+    this.socket = socketIOClient(url);
 
     this.state = {
       luminosidade: '68',
@@ -36,11 +39,13 @@ class App extends Component {
 
   componentDidMount() {
     //this.getClima();
-    this.getStatus();
+    //this.getStatus();
+    //const socket = socketIOClient(url);
+    this.socket.on('status', data => this.setState({ ...data }));
   }
 
   getStatus() {
-    axios.get(`${url}status`)
+    axios.get(`${uri}status`)
     .then((res) => {
         const response = res.data;
         console.log(response);
@@ -54,7 +59,7 @@ class App extends Component {
   }
 
   getClima() {
-    axios.get(`${url}clima`)
+    axios.get(`${uri}clima`)
     .then((res) => {
         const response = res.data;
         console.log(response);
@@ -70,7 +75,7 @@ class App extends Component {
   postStatus() {
     const { led1on, led2on } = this.state;
 
-    axios.post(`${url}status`, {
+    axios.post(`${uri}status`, {
       led1on,
       led2on
     })
@@ -80,6 +85,10 @@ class App extends Component {
     .catch((err) => {
       console.log(err);
     });
+  }
+
+  send() {
+    this.socket.emit('setStatus', { led1on: this.state.led1on, led2on: this.state.led2on });
   }
 
   render() {
@@ -129,7 +138,7 @@ class App extends Component {
               onClick={() => {
                 this.setState(
                   { led1on: this.state.led1on === 1 ? 0 : 1 },
-                  () => this.postStatus()
+                  () => this.send()
                 );
               }}
             />
@@ -141,7 +150,7 @@ class App extends Component {
               onClick={() => {
                 this.setState(
                   { led2on: this.state.led2on === 1 ? 0 : 1 },
-                  () => this.postStatus()
+                  () => this.send()
                 );
               }}
             />
