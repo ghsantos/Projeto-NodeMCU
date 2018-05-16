@@ -1,12 +1,9 @@
-let clima = {'temperatura': '?', 'umidade': '?', 'luminosidade': '?'};
-//let status = { 'led1on': 1, 'led2on': 1 }
-
 const status = require('../status');
-
+const clima = require('../clima');
 
 module.exports = (router) => {
   router.route('/').get((req, res) => {
-      res.send('Hello world, Samueldasdadas! ');
+      res.send('Hello in to NodeMCU App');
   });
 
   router.route('/status').get((req, res) => {
@@ -14,24 +11,18 @@ module.exports = (router) => {
   });
 
   router.route('/status').post((req, res) => {
-      console.log(req.body);
-
       status.set(req.body);
 
-      res.status(200).send(status);
+      res.status(201).send(status.get());
   });
 
   router.route('/clima').get((req, res) => {
-      //res.status(200).send({'temperatura': '50', 'umidade': '60', 'luminosidade': '70'});
-      res.status(200).send(clima);
+      res.status(200).send(clima.get());
   });
 
   router.route('/clima').post((req, res) => {
-      console.log(req.body);
+      clima.set(req.body);
 
-      clima = req.body;
-
-      //res.status(200).send({'temperatura': '50', 'umidade': '60', 'luminosidade': '70'});
-      res.status(200).send(clima);
+      res.status(201).send(clima.get());
   });
 }

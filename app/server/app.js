@@ -9,6 +9,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 const status = require('./status');
+const clima = require('./clima');
 
 const port = 5000 || process.env.PORT;
 
@@ -23,23 +24,29 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-//res.header("Access-Control-Allow-Origin", "*");
-//app.use('/static',express.static(path.join(__dirname,'static')))
 
 app.use('/api', router);
 
 io.on('connection', socket => {
   status.setEmiter(socket);
+  clima.setEmiter(socket);
 
   console.log("New client connected");
 
   socket.emit('status', status.get());
+  socket.emit('clima', clima.get());
 
   socket.on('setStatus', data => {
     status.set(data);
 
     socket.broadcast.emit('status', data);
-  })
+  });
+
+  socket.on('setClima', data => {
+    clima.set(data);
+
+    socket.broadcast.emit('clima', data);
+  });
 
   socket.on("disconnect", () => console.log("Client disconnected"));
 });

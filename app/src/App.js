@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import Paper from 'material-ui/Paper';
 
+//const url = 'http://localhost:5000';
 const url = 'http://10.60.165.39:5000';
 const uri = process.env.NODE_ENV === 'production' ? "/api/" : `${url}/api/`;
 
@@ -38,53 +39,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    //this.getClima();
-    //this.getStatus();
-    //const socket = socketIOClient(url);
     this.socket.on('status', data => this.setState({ ...data }));
-  }
-
-  getStatus() {
-    axios.get(`${uri}status`)
-    .then((res) => {
-        const response = res.data;
-        console.log(response);
-
-        const { led1on, led2on } = response;
-
-        this.setState({ led1on, led2on });
-    }).catch((err) => {
-        console.log(err);
-    });
-  }
-
-  getClima() {
-    axios.get(`${uri}clima`)
-    .then((res) => {
-        const response = res.data;
-        console.log(response);
-
-        const { luminosidade, temperatura, umidade } = response;
-
-        this.setState({ luminosidade, temperatura, umidade });
-    }).catch((err) => {
-        console.log(err);
-    });
-  }
-
-  postStatus() {
-    const { led1on, led2on } = this.state;
-
-    axios.post(`${uri}status`, {
-      led1on,
-      led2on
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    this.socket.on('clima', data => this.setState({ ...data }));
   }
 
   send() {
@@ -114,21 +70,6 @@ class App extends Component {
                 <span style={{fontSize: 23}}>Luminosidade: {this.state.luminosidade}%</span>
               </div>
           </Paper>
-
-          <div>
-            <RaisedButton
-              label="status"
-              primary={true}
-              style={style}
-              onClick={() => this.getStatus()}
-            />
-            <RaisedButton
-              label="clima"
-              primary={true}
-              style={style}
-              onClick={() => this.getClima()}
-            />
-          </div>
 
           <div>
             <RaisedButton

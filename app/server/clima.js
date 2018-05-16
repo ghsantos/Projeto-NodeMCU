@@ -1,4 +1,4 @@
-let status = { 'led1on': 1, 'led2on': 1 };
+let clima = {'temperatura': '22', 'umidade': '57', 'luminosidade': '60'};
 let socket = false;
 
 exports.setEmiter = function (e) {
@@ -7,15 +7,15 @@ exports.setEmiter = function (e) {
 
 exports.get = function () {
   console.log('get');
-  return status;
+  return clima;
 }
 
 exports.set = function (data) {
   console.log('set');
-  status = data;
+  clima = data;
 
   if(socket) {
     console.log('socket');
-    socket.broadcast.emit('status', data);
+    socket.broadcast.emit('clima', data);
   }
 }
