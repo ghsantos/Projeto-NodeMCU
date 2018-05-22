@@ -16,6 +16,6 @@ exports.set = function (data) {
 
   if(socket) {
     console.log('socket');
-    socket.broadcast.emit('status', data);
+    socket.emit('status', data);
   }
 }

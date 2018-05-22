@@ -28,8 +28,8 @@ app.use(function(req, res, next) {
 app.use('/api', router);
 
 io.on('connection', socket => {
-  status.setEmiter(socket);
-  clima.setEmiter(socket);
+  status.setEmiter(io);
+  clima.setEmiter(io);
 
   console.log("New client connected");
 

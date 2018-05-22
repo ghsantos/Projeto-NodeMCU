@@ -114,7 +114,7 @@ void loop() {
         }
     }
     
-    if (timeSinceLastReadSensors >= 1000) {
+    if (timeSinceLastReadSensors >= 500) {
         // Read humidity
         float h = dht.readHumidity();
         // Read temperature as Celsius (the default)

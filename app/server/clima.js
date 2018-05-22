@@ -16,6 +16,6 @@ exports.set = function (data) {
 
   if(socket) {
     console.log('socket');
-    socket.broadcast.emit('clima', data);
+    socket.emit('clima', data);
   }
 }
